@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termómetro de Salud Financiera - APEFI</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f4f8; 
+            color: #333; 
+            line-height: 1.6; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: #ffffff; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1); 
+        }
+        h1 { 
+            color: #1a365d; 
+            text-align: center; 
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        .question { 
+            margin-bottom: 25px; 
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #38a169;
+        }
+        .question h3 { 
+            margin-top: 0; 
+            color: #2d3748; 
+            font-size: 1.1em; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 10px; 
+            padding: 12px; 
+            background: #edf2f7; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+        }
+        label:hover { 
+            background: #e2e8f0; 
+            transform: translateX(5px);
+        }
+        input[type="radio"] { 
+            margin-right: 12px; 
+            transform: scale(1.2);
+        }
+        .btn { 
+            display: block; 
+            width: 100%;
+            background: #38a169; 
+            color: #fff; 
+            padding: 15px 25px; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1.1em; 
+            font-weight: bold;
+            cursor: pointer; 
+            margin-top: 30px; 
+            text-align: center; 
+            text-decoration: none; 
+            transition: background 0.3s; 
+        }
+        .btn:hover { 
+            background: #2f855a; 
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .btn-print { 
+            flex: 1;
+            background: #718096; 
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        .btn-print:hover { 
+            background: #4a5568; 
+        }
+        .btn-kofi { 
+            flex: 2;
+            background: #FF5E5B; 
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .btn-kofi:hover { 
+            background: #ff4744; 
+        }
+        #result-section { 
+            display: none; 
+            margin-top: 40px; 
+            padding-top: 30px; 
+            border-top: 2px dashed #cbd5e0; 
+        }
+        .profile-title { 
+            font-size: 1.8em; 
+            font-weight: bold; 
+            color: #1a365d; 
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .points-badge {
+            display: block;
+            text-align: center;
+            color: #e53e3e;
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+        .analysis { 
+            font-style: italic; 
+            color: #4a5568; 
+            margin-bottom: 25px; 
+            text-align: center;
+            font-size: 1.1em;
+            padding: 15px;
+            background: #ebf8ff;
+            border-radius: 8px;
+        }
+        .recommendations {
+            background: #fff;
+            padding: 20px 20px 20px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .recommendations li { 
+            margin-bottom: 12px; 
+            color: #2d3748;
+        }
+        .cta-container {
+            margin-top: 40px;
+            padding: 20px;
+            background: #fff5f5;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #fed7d7;
+        }
+        .brand {
+            text-align: center;
+            font-weight: bold;
+            color: #718096;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+        
+        /* Estilos específicos para la impresión */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .container { box-shadow: none; padding: 0; width: 100%; max-width: 100%; }
+            .btn, .action-buttons, .cta-container { display: none !important; }
+            .question { page-break-inside: avoid; border: 1px solid #ccc; background: none; }
+            #result-section { border-top: 2px solid #000; page-break-before: always; }
+            .analysis { background: none; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Termómetro de Salud Financiera</h1>
+    <p class="subtitle">Evalúa en 2 minutos tu presupuesto, fondo de emergencia y nivel de endeudamiento. Conoce tu temperatura financiera hoy mismo.</p>
+    
+    <form id="quiz-form">
+        <!-- 10 Preguntas -->
+        <div class="question">
+            <h3>1. ¿Tienes un presupuesto mensual (en papel, Excel o App)?</h3>
+            <label><input type="radio" name="q1" value="1" required> a) No, improviso cada mes</label>
+            <label><input type="radio" name="q1" value="3"> b) Lo tengo en mente, más o menos sé en qué gasto</label>
+            <label><input type="radio" name="q1" value="5"> c) Sí, registro mis ingresos y gastos detalladamente</label>
+        </div>
+        
+        <div class="question">
+            <h3>2. ¿Clasificas tus gastos en esenciales y discrecionales?</h3>
+            <label><input type="radio" name="q2" value="1" required> a) No, gasto según va surgiendo</label>
+            <label><input type="radio" name="q2" value="3"> b) A veces intento priorizar, pero me cuesta</label>
+            <label><input type="radio" name="q2" value="5"> c) Siempre, sé exactamente qué gastos puedo recortar si es necesario</label>
+        </div>
+
+        <div class="question">
+            <h3>3. ¿Llegas a fin de mes sin pedir prestado?</h3>
+            <label><input type="radio" name="q3" value="1" required> a) Casi nunca, suelo usar la tarjeta de crédito para llegar</label>
+            <label><input type="radio" name="q3" value="3"> b) A duras penas, suelo llegar en ceros</label>
+            <label><input type="radio" name="q3" value="5"> c) Sí, siempre y me sobra dinero</label>
+        </div>
+
+        <div class="question">
+            <h3>4. ¿Tienes un fondo de emergencia separado de tu cuenta principal?</h3>
+            <label><input type="radio" name="q4" value="1" required> a) No tengo ahorros para imprevistos</label>
+            <label><input type="radio" name="q4" value="3"> b) Tengo un poco, pero menos de 1 mes de gastos</label>
+            <label><input type="radio" name="q4" value="5"> c) Sí, tengo ahorrado entre 3 y 6 meses de mis gastos básicos</label>
+        </div>
+
+        <div class="question">
+            <h3>5. ¿Cómo pagas tus tarjetas de crédito?</h3>
+            <label><input type="radio" name="q5" value="1" required> a) Pago el mínimo mensual o a veces me atraso</label>
+            <label><input type="radio" name="q5" value="3"> b) Pago más del mínimo, pero sigo arrastrando deuda</label>
+            <label><input type="radio" name="q5" value="5"> c) Pago el saldo total cada mes o no uso tarjetas de crédito</label>
+        </div>
+
+        <div class="question">
+            <h3>6. ¿Qué porcentaje de tus ingresos se va en pagar deudas (sin contar hipoteca)?</h3>
+            <label><input type="radio" name="q6" value="1" required> a) Más del 40% de mis ingresos</label>
+            <label><input type="radio" name="q6" value="3"> b) Entre el 15% y el 39% de mis ingresos</label>
+            <label><input type="radio" name="q6" value="5"> c) Menos del 15% o no tengo deudas</label>
+        </div>
+
+        <div class="question">
+            <h3>7. ¿Conoces con exactitud cuánto dinero debes y a qué tasa de interés?</h3>
+            <label><input type="radio" name="q7" value="1" required> a) No, me da ansiedad mirar mis deudas</label>
+            <label><input type="radio" name="q7" value="3"> b) Tengo una idea general, pero no los números exactos</label>
+            <label><input type="radio" name="q7" value="5"> c) Sí, tengo una lista exacta con saldos y tasas de interés</label>
+        </div>
+
+        <div class="question">
+            <h3>8. ¿Tienes controlados tus "gastos hormiga" (cafés, suscripciones, snacks)?</h3>
+            <label><input type="radio" name="q8" value="1" required> a) No, gasto sin pensar en pequeñas cosas</label>
+            <label><input type="radio" name="q8" value="3"> b) Intento controlarlos, pero a veces se me escapan</label>
+            <label><input type="radio" name="q8" value="5"> c) Sí, los tengo presupuestados y controlados</label>
+        </div>
+
+        <div class="question">
+            <h3>9. ¿Tienes automatizado tu ahorro mensual?</h3>
+            <label><input type="radio" name="q9" value="1" required> a) No, solo ahorro si me sobra algo a fin de mes</label>
+            <label><input type="radio" name="q9" value="3"> b) A veces separo dinero manualmente cuando me acuerdo</label>
+            <label><input type="radio" name="q9" value="5"> c) Sí, mi ahorro se transfiere automáticamente el día que cobro</label>
+        </div>
+
+        <div class="question">
+            <h3>10. ¿Cómo te sientes al pensar en tu situación financiera actual?</h3>
+            <label><input type="radio" name="q10" value="1" required> a) Muy estresado y ansioso, no me deja dormir</label>
+            <label><input type="radio" name="q10" value="3"> b) Tranquilo por ahora, pero preocupado si algo sale mal</label>
+            <label><input type="radio" name="q10" value="5"> c) Seguro, organizado y en control de mi dinero</label>
+        </div>
+        
+        <button type="submit" class="btn">Medir mi Temperatura Financiera</button>
+    </form>
+
+    <div id="result-section">
+        <h2 class="profile-title">Tu Diagnóstico: <span id="profile-name"></span></h2>
+        <span class="points-badge">Puntuación total: <span id="profile-score"></span> / 50 puntos</span>
+        
+        <p class="analysis" id="profile-analysis"></p>
+        
+        <h3 style="color: #2d3748;">Tu Plan de Acción (Receta APEFI):</h3>
+        <ul class="recommendations" id="profile-recommendations"></ul>
+        
+        <div class="action-buttons">
+            <button onclick="window.print()" class="btn-print">🖨️ Imprimir mis resultados</button>
+            <a href="https://ko-fi.com/apefi" target="_blank" class="btn-kofi">☕ Descargar Plantilla de Presupuesto</a>
+        </div>
+
+        <div class="cta-container">
+            <p style="margin-bottom: 10px; font-weight: bold; color: #c53030; font-size: 1.1em;">¿Necesitas ordenar tus números urgemente?</p>
+            <p style="margin: 0; color: #4a5568;">En mi Ko-fi encontrarás simuladores avanzados y plantillas de presupuesto automatizadas (Avalancha y Bola de Nieve) para tomar el control de tu dinero hoy mismo.</p>
+        </div>
+
+        <div class="brand">Desarrollado por APEFI - Educación Financiera</div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('quiz-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Sumar puntos
+        let score = 0;
+        const formData = new FormData(this);
+        for (let [key, value] of formData.entries()) {
+            score += parseInt(value);
+        }
+        
+        let profile = "";
+        let analysis = "";
+        let recommendations = [];
+        
+        if (score >= 10 && score <= 20) {
+            profile = "🔴 Finanzas en Rojo (Alerta Máxima)";
+            analysis = "Tu situación actual genera estrés. Necesitas tomar el control de tus ingresos y deudas urgentemente antes de pensar en invertir.";
+            recommendations = [
+                "Paso 1: Escribe TODO lo que gastas durante los próximos 30 días para identificar fugas.",
+                "Paso 2: Detén los gastos con tarjeta de crédito inmediatamente para no agrandar la deuda.",
+                "Paso 3: Vende cosas que no uses o recorta gastos discrecionales hasta armar un fondo de emergencia inicial de $1,000.",
+                "Paso 4: Descarga mi simulador de salida de deudas para atacar tus saldos con el método bola de nieve."
+            ];
+        } else if (score >= 21 && score <= 35) {
+            profile = "🟡 Estable pero Vulnerable";
+            analysis = "Tienes nociones básicas y cierta estabilidad, pero dependes mucho de tu quincena. Un imprevisto grave podría desestabilizarte.";
+            recommendations = [
+                "Paso 1: Automatiza tu ahorro. Configura una transferencia automática del 10% de tu salario apenas cobres.",
+                "Paso 2: Construye un fondo de emergencia sólido equivalente a 3 meses de tus gastos esenciales.",
+                "Paso 3: Ataca los gastos hormiga (cafés, suscripciones) y redirige ese dinero al pago de deudas de alto interés.",
+                "Paso 4: Comienza a estudiar opciones de renta fija para tus ahorros mientras terminas de ordenar el presupuesto."
+            ];
+        } else if (score >= 36 && score <= 50) {
+            profile = "🟢 Salud de Hierro";
+            analysis = "¡Felicidades! Tienes el control total de tu dinero, un presupuesto sólido y entiendes cómo funcionan las deudas.";
+            recommendations = [
+                "Paso 1: Asegúrate de que tu fondo de emergencia esté en una cuenta que te genere rendimientos (alta liquidez).",
+                "Paso 2: Haz el Test 'Descubre tu Perfil de Inversor' (Paso 1) para empezar a armar tu portafolio.",
+                "Paso 3: Utiliza la calculadora de Interés Compuesto para proyectar tus metas a 10, 20 o 30 años.",
+                "Paso 4: Explora opciones de Renta Variable (ETFs, Acciones) de acuerdo a tu tolerancia al riesgo para acelerar tu crecimiento."
+            ];
+        }
+        
+        // Mostrar resultados
+        document.getElementById('profile-name').textContent = profile;
+        document.getElementById('profile-score').textContent = score;
+        document.getElementById('profile-analysis').textContent = analysis;
+        
+        const recList = document.getElementById('profile-recommendations');
+        recList.innerHTML = "";
+        recommendations.forEach(rec => {
+            let li = document.createElement('li');
+            li.textContent = rec;
+            recList.appendChild(li);
+        });
+        
+        // Mostrar sección y animar
+        const resultSection = document.getElementById('result-section');
+        resultSection.style.display = 'block';
+        resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+</script>
+</body>
+</html>
