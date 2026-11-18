@@ -39,44 +39,86 @@
             color: var(--primary-color);
             margin: 0 0 10px 0;
         }
+        
+        /* Estilos de los botones deslizantes */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
         }
         label {
             display: block;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 15px;
             color: #475569;
+            font-size: 16px;
+        }
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        /* Rango / Slider */
+        input[type="range"] {
+            flex-grow: 1;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #cbd5e1;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            transition: background .15s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #334155;
+            transform: scale(1.1);
+        }
+        
+        /* Caja de número */
+        .number-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .number-box span {
+            position: absolute;
+            left: 10px;
+            color: #64748b;
+            font-weight: bold;
         }
         input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #cbd5e1;
+            width: 130px;
+            padding: 10px 10px 10px 35px;
+            border: 2px solid #cbd5e1;
             border-radius: 6px;
             font-size: 16px;
+            font-weight: bold;
+            color: var(--primary-color);
             box-sizing: border-box;
         }
-        .btn-calcular {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
         }
-        .btn-calcular:hover {
-            background-color: #1e293b;
-        }
+
         #resultados {
-            display: none;
             margin-top: 40px;
             padding: 30px;
             border-radius: 8px;
             text-align: center;
+            transition: all 0.3s ease;
         }
         .status-verde { background-color: #dcfce7; border: 2px solid var(--green); }
         .status-naranja { background-color: #ffedd5; border: 2px solid var(--orange); }
@@ -99,14 +141,9 @@
             margin-top: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .receta-apefi h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
-        .receta-apefi ul {
-            padding-left: 20px;
-            line-height: 1.6;
-        }
+        .receta-apefi h3 { margin-top: 0; color: var(--primary-color); }
+        .receta-apefi ul { padding-left: 20px; line-height: 1.6; }
+        
         .cta-section {
             margin-top: 30px;
             border-top: 1px solid #e2e8f0;
@@ -120,21 +157,18 @@
             font-weight: bold;
             margin: 10px;
             cursor: pointer;
-        }
-        .btn-imprimir {
-            background-color: #64748b;
-            color: white;
             border: none;
+            font-size: 16px;
         }
-        .btn-descargar {
-            background-color: #dc2626; /* Rojo para destacar la llamada a la acción */
-            color: white;
-        }
-        .footer-text {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 40px;
-            text-align: center;
+        .btn-imprimir { background-color: #64748b; color: white; }
+        .btn-descargar { background-color: #dc2626; color: white; }
+        .footer-text { font-size: 12px; color: #94a3b8; margin-top: 40px; text-align: center; }
+        
+        /* Oculta las flechas por defecto de los inputs numéricos */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
         }
     </style>
 </head>
@@ -147,24 +181,47 @@
     </div>
 
     <div id="formulario">
+        <!-- Ingresos -->
         <div class="form-group">
-            <label for="ingreso">Salario Neto Mensual (Ingresos + Extras) - B/.</label>
-            <input type="number" id="ingreso" placeholder="Ej. 1000" min="1">
+            <label for="ingreso">Salario Neto Mensual (Ingresos + Extras)</label>
+            <div class="input-row">
+                <input type="range" id="ingreso-slider" min="100" max="5000" step="50" value="1000" oninput="syncInput('ingreso', this.value)">
+                <div class="number-box">
+                    <span>B/.</span>
+                    <input type="number" id="ingreso" value="1000" min="1" oninput="syncSlider('ingreso', this.value)">
+                </div>
+            </div>
         </div>
+
+        <!-- Gastos -->
         <div class="form-group">
-            <label for="gastos">Gastos de Vida y Necesidades Básicas - B/.</label>
-            <input type="number" id="gastos" placeholder="Ej. 700" min="0">
+            <label for="gastos">Gastos de Vida y Necesidades Básicas</label>
+            <div class="input-row">
+                <input type="range" id="gastos-slider" min="0" max="5000" step="10" value="700" oninput="syncInput('gastos', this.value)">
+                <div class="number-box">
+                    <span>B/.</span>
+                    <input type="number" id="gastos" value="700" min="0" oninput="syncSlider('gastos', this.value)">
+                </div>
+            </div>
         </div>
+
+        <!-- Ahorro -->
         <div class="form-group">
-            <label for="ahorro">Ahorro Mensual Destinado - B/.</label>
-            <input type="number" id="ahorro" placeholder="Ej. 100" min="0">
+            <label for="ahorro">Ahorro Mensual Destinado</label>
+            <div class="input-row">
+                <input type="range" id="ahorro-slider" min="0" max="5000" step="10" value="100" oninput="syncInput('ahorro', this.value)">
+                <div class="number-box">
+                    <span>B/.</span>
+                    <input type="number" id="ahorro" value="100" min="0" oninput="syncSlider('ahorro', this.value)">
+                </div>
+            </div>
         </div>
-        <button class="btn-calcular" onclick="calcularSalud()">Calcular mi Salud Financiera</button>
     </div>
 
-    <div id="resultados">
+    <!-- Resultados -->
+    <div id="resultados" class="status-verde">
         <div id="diagnostico-caja">
-            <h2 class="diagnostico-titulo" id="titulo-resultado"></h2>
+            <h2 class="diagnostico-titulo" id="titulo-resultado">Cargando...</h2>
             <p id="texto-diagnostico"></p>
         </div>
 
@@ -190,15 +247,24 @@
 </div>
 
 <script>
-    function calcularSalud() {
-        const ingreso = parseFloat(document.getElementById('ingreso').value);
-        const gastos = parseFloat(document.getElementById('gastos').value);
-        const ahorro = parseFloat(document.getElementById('ahorro').value);
+    // Funciones para sincronizar el slider interactivo con la caja de texto
+    function syncInput(id, value) {
+        document.getElementById(id).value = value;
+        calcularSalud(); // Calcula automáticamente al mover el botón
+    }
 
-        if (!ingreso || ingreso <= 0) {
-            alert("Por favor, ingresa un salario válido.");
-            return;
-        }
+    function syncSlider(id, value) {
+        document.getElementById(id + '-slider').value = value;
+        calcularSalud(); // Calcula automáticamente al escribir el número
+    }
+
+    // Lógica del Semáforo
+    function calcularSalud() {
+        const ingreso = parseFloat(document.getElementById('ingreso').value) || 0;
+        const gastos = parseFloat(document.getElementById('gastos').value) || 0;
+        const ahorro = parseFloat(document.getElementById('ahorro').value) || 0;
+
+        if (ingreso <= 0) return; // Evita calcular si no hay ingresos
 
         const porcentajeGastos = (gastos / ingreso) * 100;
         const porcentajeAhorro = (ahorro / ingreso) * 100;
@@ -208,10 +274,9 @@
         const texto = document.getElementById('texto-diagnostico');
         const receta = document.getElementById('lista-receta');
 
-        // Limpiar clases previas
+        // Reiniciar clases de color
         resultadosDiv.className = '';
 
-        // Lógica del Semáforo
         if (porcentajeGastos <= 80 && porcentajeAhorro >= 10) {
             // VERDE
             resultadosDiv.classList.add('status-verde');
@@ -235,7 +300,7 @@
                 <li>Paso 4: Busca generar ingresos extra urgentes para equilibrar tu flujo de caja.</li>
             `;
         } else {
-            // NARANJA (El modelo de la imagen)
+            // NARANJA
             resultadosDiv.classList.add('status-naranja');
             titulo.textContent = "NARANJA: Presta Atención";
             texto.textContent = "Tienes nociones básicas y cierta estabilidad, pero dependes mucho de tu quincena. Un imprevisto grave podría desestabilizarte.";
@@ -246,13 +311,10 @@
                 <li>Paso 4: Comienza a estudiar opciones de renta fija para tus ahorros mientras terminas de ordenar el presupuesto.</li>
             `;
         }
-
-        // Mostrar resultados
-        resultadosDiv.style.display = 'block';
-        
-        // Scroll hacia los resultados
-        resultadosDiv.scrollIntoView({ behavior: 'smooth' });
     }
+
+    // Ejecutar el cálculo la primera vez que se carga la página
+    window.onload = calcularSalud;
 </script>
 
 </body>
